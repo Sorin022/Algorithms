@@ -5,6 +5,10 @@
 #include <ctype.h>
 using namespace std;
 
+int Bamount = 0;
+int Btotal = 0;
+float Bavg = 0;
+
 struct Node
 {
   string data;
@@ -86,84 +90,75 @@ void shuffle(ptr* head){
   }
 }
 
-float LinearSearch(ptr head, string key){
+int LinearSearch(ptr head, string key){
     ptr temp = head;
     int amount = 0;
-    int total = 0;
 
-    for (int i=0; i<42; i++){
-        while (key != temp->data){
-            amount++;
-            temp = temp->link;
-        }
+    while (temp && temp->data != key) {
+        amount++;
+        temp = temp->link;
     }
 
     return amount;
 }
 
-ptr Middle(Node* head) {
-    Node* by2;
-    Node* by1;
-    by1 = head;
-    by2 = head->link;
+struct Node* Middle(Node* start, Node* end)
+{
+    if (start == NULL)
+        return NULL;
 
-    while (by2 != NULL) {
-        by2 = by2->link;
-        if (by2 != NULL) {
-            by1 = by1->link;
-            by2 = by2->link;
+    struct Node* slow = start;
+    struct Node* fast = start->link;
+
+    while (fast != end) {
+        fast = fast->link;
+        if (fast != end) {
+            slow = slow->link;
+            fast = fast->link;
         }
     }
 
-    by1->link = NULL;
-    return by1;
+    return slow;
 }
 
-void Reverse(ptr head){
-    ptr start = head;
-    ptr previous = NULL;
-    ptr link = NULL;
 
-    while (start != NULL){
-        link = start->link;
-        start->link = previous;
-        previous = start;
-        start = link;
-    }
-    head = previous;
-}
+struct Node* BinarySearch(Node* head, string value)
+{
+    struct Node* start = head;
+    struct Node* last = NULL;
 
-float BinarySearch(ptr head, string key){
-    int amount = 0;
-    int total = 0;
+    do {
+        Node* mid = Middle(start, last);
 
-    ptr check = NULL;
-    check = Middle(head);
+        if (mid == NULL)
+            return NULL;
 
-    while(check->data != key){
-        if (check->data < key){
-            Reverse(head);
-            amount++;
+        if (mid->data == value){
+          Btotal = Bamount + Btotal;
+          return mid;
+        }else if (mid->data < value){
+          Bamount++;
+          start = mid->link;
+        }else{
+          Bamount++;
+          last = mid;
         }
-        else{
-            Middle(head);
-            amount++;
-        }
-    }
 
-    return amount;
+    } while (last == NULL || last != start);
+
+    return NULL;
 }
 
-class Hashtable{
+/*class Hashtable{
   private:
     static const int hashsize = 250;
-    list<pair<string, ptr>> magicTable[hashsize];
+    list<pair<int, string>> magicTable[hashsize];
 
   public:
     bool isEmpty();
     int hashFunction(string magicString);
-    void insert(string key, ptr data);
-    ptr searchHash(string key);
+    void insert(int key, string data);
+    int searchHash(string data);
 };
 
 bool Hashtable::isEmpty() {
@@ -195,8 +190,8 @@ int Hashtable::hashFunction(string magicString){
   return letterTotal;
 }
 
-void Hashtable::insert(string key, ptr data){
-  int hashcode = hashFunction(key);
+void Hashtable::insert(int key, string data){
+  int hashcode = hashFunction(data);
   auto& block = magicTable[hashcode];
   auto beginning = begin(block);
   bool exists = false;
@@ -217,23 +212,25 @@ void Hashtable::insert(string key, ptr data){
 
 }
 
-ptr Hashtable::searchHash(string key){
-  int hashcode = hashFunction(key);
+int Hashtable::searchHash(string data){
+  int hashcode = hashFunction(data);
   auto& block = magicTable[hashcode];
   auto beginning = begin(block);
+  int amountToCheck = 0;
 
   for (int j=0; beginning != end(block); beginning++){
-    if(beginning->first == key){
-      return beginning->second;
+    amountToCheck++;
+    if(beginning->second == data){
+      return amountToCheck;
     }
   }
-
-  return nullptr;
-}
+  return 0;
+}*/
 
 int main() {
   string readInString;
   ifstream File;
+  string insert = "0";
   File.open("C:\\Users\\sorin\\OneDrive\\Documents\\GitHub\\Algorithms\\Projects\\lol.txt");
 
 
@@ -243,11 +240,15 @@ int main() {
   }
 
   ptr head = NULL;
+  /*Hashtable magic;*/
+  int num = 0;
 
   while(File >> readInString){  
-    string firstChar = readInString;
+    string firstString = readInString;
 
-    push(&head, firstChar);
+    push(&head, firstString);
+
+    /*magic.insert(num, firstString);*/
   }
 
   SelectSort(head);
@@ -260,34 +261,39 @@ int main() {
     string insert = head->data;
 
     push(&head2, insert);
-
   }
 
   int amountL = 0;
   int totalL = 0;
-  float avgL = 0; 
-
-  int amountB = 0;
-  int totalB = 0;
-  float avgB = 0; 
+  float avgL = 0;  
 
   for (int j=0; j<42; j++){
-    string ans = pop(*&head);
+    string ans = pop(*&head2);
 
     amountL = LinearSearch(head, ans);
     totalL = amountL + totalL;
 
-    amountB = BinarySearch(head, ans);
-    totalB = amountB + totalB;
+    BinarySearch(head, ans);
+    
   }
 
   avgL = ("%.2f", totalL/42);
-  avgB = ("%.2f", totalB/42);
+  Bavg = ("%.2f", Btotal/42);
 
-  Hashtable magic;
+  for (int k = 0; k<42; k++){
+    string hashCheck = pop(*&head);
 
-  //jsut call the insert functions and you will insert in a new iteam.
-  //you pass it the link its attached to and the data it is.
-  //same thing for search.
+    /*magic.searchHash(hashCheck);*/
+
+  }
+
+  /*Hashtable test;
+
+  test.insert(1, "Sorin");
+  test.insert(2, "Joe");
+  test.insert(3, "Bob");
+  test.insert(4, "Kevin");
+  test.insert(5, "Stacie");*/
+  
 
 }

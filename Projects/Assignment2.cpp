@@ -168,8 +168,7 @@ struct Node* Split(struct Node* head, struct Node* end,
 }
   
 
-struct Node* QuickSortRecurcussion(struct Node* start,
-                            struct Node* end)
+struct Node* QuickSortRecurcussion(struct Node* start, struct Node* end)
 {
     if (!start || start == end)
         return start;
