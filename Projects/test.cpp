@@ -10,7 +10,6 @@ private:
 public:
     int hashFunction(int key);
     void insert(int key, const std::string& data);
-    void remove(int key);
     std::string search(int key);
 };
 
@@ -23,19 +22,6 @@ void HashTable::insert(int key, const std::string& data) {
     table[hashValue].emplace_back(key, data);
 }
 
-void HashTable::remove(int key) {
-    int hashValue = hashFunction(key);
-    auto& bucket = table[hashValue];
-
-    for (auto it = bucket.begin(); it != bucket.end(); ++it) {
-        if (it->first == key) {
-            bucket.erase(it);
-            return;
-        }
-    }
-
-    std::cout << "Key not found!" << std::endl;
-}
 
 std::string HashTable::search(int key) {
     int hashValue = hashFunction(key);

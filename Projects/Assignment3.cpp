@@ -149,33 +149,19 @@ struct Node* BinarySearch(Node* head, string value)
     return NULL;
 }
 
-/*class Hashtable{
+class Hashtable{
   private:
     static const int hashsize = 250;
     list<pair<int, string>> magicTable[hashsize];
 
   public:
-    bool isEmpty();
     int hashFunction(string magicString);
     void insert(int key, string data);
     int searchHash(string data);
 };
 
-bool Hashtable::isEmpty() {
-  int total = 0;
-  for (int i =0; i < hashsize; i++){
-    int sum = sum + magicTable[i].size();
-  }
-
-  if(!total){
-    return true;
-  }else{
-    return false;
-  }
-};
-
 int Hashtable::hashFunction(string magicString){
- for(int j=0; j<magicString.length(); j++){
+ for(int j=0; j<magicString.size(); j++){
   magicString[j] = toupper(magicString[j]);
  }
   int length = magicString.length();
@@ -187,45 +173,33 @@ int Hashtable::hashFunction(string magicString){
     letterTotal = letterTotal + thisValue;
   }
 
-  return letterTotal;
+  int hashCode = (letterTotal * 1) % hashsize;
+
+  return hashCode;
 }
 
 void Hashtable::insert(int key, string data){
-  int hashcode = hashFunction(data);
-  auto& block = magicTable[hashcode];
-  auto beginning = begin(block);
-  bool exists = false;
-
-  for(int i=0; beginning != end(block); beginning++){
-    if(beginning->first == key){
-      exists = true;
-      beginning->second = data;
-      break;
-    }
-  }
-
-  if(!exists){
-    block.emplace_back(key, data);
-  }
-  
-  return;
-
+  int hashValue = hashFunction(data);
+  magicTable[hashValue].emplace_back(key, data);
 }
 
 int Hashtable::searchHash(string data){
-  int hashcode = hashFunction(data);
-  auto& block = magicTable[hashcode];
-  auto beginning = begin(block);
-  int amountToCheck = 0;
+  int hashValue = hashFunction(data);
+  auto& bucket = magicTable[hashValue];
+  int amount = 0;
+  int Htotal = 0;
 
-  for (int j=0; beginning != end(block); beginning++){
-    amountToCheck++;
-    if(beginning->second == data){
-      return amountToCheck;
-    }
+  for (const auto& item : bucket) {
+      amount++;
+      if (item.second == data) {
+        Htotal = Htotal + amount;
+      }
   }
-  return 0;
-}*/
+
+  float Havg = ("%.2f", Htotal/42);
+
+  return Havg;
+}
 
 int main() {
   string readInString;
@@ -240,7 +214,7 @@ int main() {
   }
 
   ptr head = NULL;
-  /*Hashtable magic;*/
+  Hashtable magic;
   int num = 0;
 
   while(File >> readInString){  
@@ -248,7 +222,9 @@ int main() {
 
     push(&head, firstString);
 
-    /*magic.insert(num, firstString);*/
+    magic.insert(num, firstString);
+
+    num++;
   }
 
   SelectSort(head);
@@ -281,19 +257,10 @@ int main() {
   Bavg = ("%.2f", Btotal/42);
 
   for (int k = 0; k<42; k++){
-    string hashCheck = pop(*&head);
+    string hashCheck = pop(*&head2);
 
-    /*magic.searchHash(hashCheck);*/
+    magic.searchHash(hashCheck);
 
   }
-
-  /*Hashtable test;
-
-  test.insert(1, "Sorin");
-  test.insert(2, "Joe");
-  test.insert(3, "Bob");
-  test.insert(4, "Kevin");
-  test.insert(5, "Stacie");*/
-  
 
 }
