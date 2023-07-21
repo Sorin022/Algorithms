@@ -1,12 +1,30 @@
 #include <iostream>
 #include <fstream>
+#include <cctype>
 using namespace std;
 
 //rows and then columns
 
-//binary search tree
-//breath-first search
-//read in the file for vertex and edges
+struct Node
+{
+  //add the left and right see doc
+  string data;
+  Node* link;
+};
+
+typedef Node* ptr;
+
+//build
+struct Node* BinaryTreeInsert() {
+
+}
+
+//build
+struct Node* BinaryTreeSearch() {
+
+}
+
+
 
 void undirectedMartix(int vetrexNum, int edge1, int edge2) {
     int undirectedMatrix2DArray[vetrexNum][vetrexNum];
@@ -96,11 +114,17 @@ int* DepthFirstSearch(int vertexAmount, LinkedObjects* vertexID) {
     return dfsResult;
 }
 
+//breath-frist Search
+
 
 
 int main() {
     string FileString;
     ifstream File;
+    int vertex;
+    int edge1;
+    int edge2;
+
     File.open("C:\\Users\\sorin\\OneDrive\\Documents\\GitHub\\Algorithms\\Projects\\graph.txt");
 
     if (!File){
@@ -111,7 +135,46 @@ int main() {
 
 
     while(File >> FileString) {
-        
+       getline(File, FileString); 
+       int amount = 0;
+       int total  = 0;
+       int placeV = 0;
+       int placeE1 = 0;
+       int placeE2 = 0;
+       int check = 0;
+
+
+       for(int j=0; j<FileString.length(); j++){
+            char FileStringChar = FileString[j];
+            FileString[j] = tolower(FileStringChar);
+       }
+
+       for (int i=0; i<FileString.length(); i++){
+        amount = int(FileString[i]);
+        total = amount + total;
+
+        if (amount == 32){
+            amount = 0;
+            total  = 0;
+        }else{
+            if (total == 670){
+              vertex = int(FileString[i+2]);
+              placeV++; 
+              cout << vertex << '\n'; 
+            }else if (total == 405){
+              edge1 = int(FileString[i+2]);
+              cout << edge1 << '\n';
+            }else if (amount == 126){
+                check = 1;
+            }else if (total == 405 && check == 1){
+                edge2 = int(FileString[i+2]);
+                cout << edge2 << '\n';
+            }
+        }
+
+
+       }
+       
     }
   
 
