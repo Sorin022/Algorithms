@@ -5,8 +5,6 @@ using namespace std;
 
 //rows and then columns
 
-//fix the reading in of the vertex amount
-
 int vertexArray[100];
 int k = 0;
 
