@@ -5,6 +5,10 @@ using namespace std;
 
 //rows and then columns
 
+//fix the reading in of the vertex amount
+
+int vertexArray[100];
+
 struct Node
 {
   //add the left and right see doc
@@ -26,11 +30,13 @@ struct Node* BinaryTreeSearch() {
 
 
 
-void undirectedMartix(int vetrexNum, int edge1, int edge2) {
-    int undirectedMatrix2DArray[vetrexNum][vetrexNum];
+void undirectedMartix(int edge1, int edge2) {
+    int k = 0;
+    int vertexNum = vertexArray[k];
+    int undirectedMatrix2DArray[vertexNum][vertexNum];
 
-    for(int i = 0; i<vetrexNum; i++){
-        for(int j = 0; j<vetrexNum; j++){
+    for(int i = 0; i<vertexNum; i++){
+        for(int j = 0; j<vertexNum; j++){
             undirectedMatrix2DArray[i][j] = 0;
         }
     }
@@ -38,11 +44,13 @@ void undirectedMartix(int vetrexNum, int edge1, int edge2) {
     undirectedMatrix2DArray[edge1-1][edge2-1] = 1;
 }
 
-void undirectedAdjencyList(int vetrexNum, int edge1, int edge2){
-   int undirectedAdjencyList2DArray[vetrexNum][vetrexNum];
+void undirectedAdjencyList(int edge1, int edge2){
+    int k = 0;
+    int vertexNum = vertexArray[k];
+    int undirectedAdjencyList2DArray[vertexNum][vertexNum];
 
-   for(int i = 0; i<vetrexNum; i++){
-        for(int j = 0; j<vetrexNum; j++){
+   for(int i = 0; i<vertexNum; i++){
+        for(int j = 0; j<vertexNum; j++){
             undirectedAdjencyList2DArray[i][j] = 0;
         }
     }
@@ -124,6 +132,8 @@ int main() {
     int vertex;
     int edge1;
     int edge2;
+    int vertexArray[100];
+    int vertexArrayPointer = 0;
 
     File.open("C:\\Users\\sorin\\OneDrive\\Documents\\GitHub\\Algorithms\\Projects\\graph.txt");
 
@@ -131,6 +141,35 @@ int main() {
         cerr << "Unable to open the file!";
         exit(1);
     }
+    
+    getline(File, FileString);
+
+    while(getline(File, FileString)){ 
+            int amount = 0;
+            int total  = 0;
+
+
+            for(int j=0; j<FileString.length(); j++){
+                    char FileStringChar = FileString[j];
+                    FileString[j] = tolower(FileStringChar);
+            }
+
+            for (int i=0; i<FileString.length(); i++){
+                amount = int(FileString[i]);
+                total = amount + total;
+
+                if (amount == 32){
+                    amount = 0;
+                    total  = 0;
+                }else if(total == 670){
+                    vertex++;
+                }else if(total ==  530) {
+                    vertexArray[vertexArrayPointer] = vertex;
+                    vertexArrayPointer++;
+                    vertex = 0;
+                }
+            }
+        }
 
 
 
@@ -138,9 +177,6 @@ int main() {
        getline(File, FileString); 
        int amount = 0;
        int total  = 0;
-       int placeV = 0;
-       int placeE1 = 0;
-       int placeE2 = 0;
        int check = 0;
 
 
@@ -157,25 +193,21 @@ int main() {
             amount = 0;
             total  = 0;
         }else{
-            if (total == 670){
-              vertex = int(FileString[i+2]);
-              placeV++; 
-              cout << vertex << '\n'; 
-            }else if (total == 405){
+            }if (total == 405){
               edge1 = int(FileString[i+2]);
-              cout << edge1 << '\n';
+              edge1 = 0;
             }else if (amount == 126){
                 check = 1;
             }else if (total == 405 && check == 1){
                 edge2 = int(FileString[i+2]);
-                cout << edge2 << '\n';
+                edge2 = 0;
+                undirectedMartix(edge1, edge2);
+                undirectedAdjencyList(edge1, edge2);
             }
         }
 
 
        }
        
-    }
-  
-
 }
+
