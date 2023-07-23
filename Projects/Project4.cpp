@@ -8,6 +8,7 @@ using namespace std;
 //fix the reading in of the vertex amount
 
 int vertexArray[100];
+int k = 0;
 
 struct Node
 {
@@ -31,7 +32,6 @@ struct Node* BinaryTreeSearch() {
 
 
 void undirectedMartix(int edge1, int edge2) {
-    int k = 0;
     int vertexNum = vertexArray[k];
     int undirectedMatrix2DArray[vertexNum][vertexNum];
 
@@ -45,7 +45,6 @@ void undirectedMartix(int edge1, int edge2) {
 }
 
 void undirectedAdjencyList(int edge1, int edge2){
-    int k = 0;
     int vertexNum = vertexArray[k];
     int undirectedAdjencyList2DArray[vertexNum][vertexNum];
 
@@ -193,16 +192,20 @@ int main() {
             amount = 0;
             total  = 0;
         }else{
-            }if (total == 405){
-              edge1 = int(FileString[i+2]);
-              edge1 = 0;
-            }else if (amount == 126){
-                check = 1;
-            }else if (total == 405 && check == 1){
-                edge2 = int(FileString[i+2]);
-                edge2 = 0;
-                undirectedMartix(edge1, edge2);
-                undirectedAdjencyList(edge1, edge2);
+            if (total != 530){
+                if (total == 405){
+                edge1 = int(FileString[i+2]);
+                edge1 = 0;
+                }else if (amount == 126){
+                    check = 1;
+                }else if (total == 405 && check == 1){
+                    edge2 = int(FileString[i+2]);
+                    edge2 = 0;
+                    undirectedMartix(edge1, edge2);
+                    undirectedAdjencyList(edge1, edge2);
+                }
+            }else if(total == 530){
+                k++;
             }
         }
 
