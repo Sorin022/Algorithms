@@ -1,30 +1,57 @@
 #include <iostream>
 #include <fstream>
 #include <cctype>
+#include <bits/stdc++.h>
 using namespace std;
-
-//rows and then columns
 
 int vertexArray[100];
 int k = 0;
+LinkedObjects graph;
 
 struct Node
 {
-  //add the left and right see doc
   string data;
-  Node* link;
+  struct Node *left, *right;
 };
 
 typedef Node* ptr;
 
-//build
-struct Node* BinaryTreeInsert() {
+struct Node* BSTnode(string data){
+    struct Node* temp
+        = (struct Node*)malloc(sizeof(struct Node));
+    temp->data = data;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+
+struct Node* BinaryTreeInsert(struct Node* Node, string data) {
+    if (Node == NULL)
+        return BSTnode(data);
+
+    if (data < Node->data){
+        Node->left = BinaryTreeInsert(Node->left, data);
+        cout << "L" << '\n';
+    }
+    else if (data > Node->data){
+        Node->right = BinaryTreeInsert(Node->right, data);
+        cout << "R" << '\n';
+    }
+ 
+    return Node;
 
 }
 
-//build
-struct Node* BinaryTreeSearch() {
 
+struct Node* BinaryTreeSearch(struct Node* root, string key) {
+    if(root == NULL || root->data == key){
+        return root;
+    }
+
+    if(root->data < key){
+        return BinaryTreeSearch(root->right, key);
+    }
+
+    return BinaryTreeSearch(root->left, key);
 }
 
 
@@ -60,8 +87,13 @@ class LinkedObjects {
         int id;
         bool processed;
         LinkedObjects** neighbors;
+    
+    LinkedObjects(){
 
-    LinkedObjects(int vertexID, bool notProcessed, int HowManyVertex){
+    }
+
+    LinkedObjects(int vertexID, bool notProcessed){
+        int HowManyVertex = vertexArray[k];
         id = vertexID;
         processed = notProcessed;
         neighbors = new LinkedObjects*[HowManyVertex];
@@ -78,7 +110,7 @@ class LinkedObjects {
 
     void addEdge(LinkedObjects* vertex, int vertexAmount){
         for (int i = 0; i < vertexAmount; i++) {
-            if (neighbors[i] == vertex) { // Check for the pointer equality.
+            if (neighbors[i] == vertex) {
                 break;
             } else if (neighbors[i] == nullptr) {
                 neighbors[i] = vertex;
@@ -119,7 +151,28 @@ int* DepthFirstSearch(int vertexAmount, LinkedObjects* vertexID) {
     return dfsResult;
 }
 
-//breath-frist Search
+void BreathFirstSearch(int vertex){
+    list<int> BFSqueue;
+
+    graph.processed = true;
+
+    BFSqueue.push_back(vertex);
+
+    while(!BFSqueue.empty()){
+        vertex = BFSqueue.front();
+        BFSqueue.pop_front();
+
+        for(auto neighbors : graph.neighbors[vertex]){
+            if(!graph.processed){
+                graph.processes = true;
+                BFSqueue.push_back(neighbors);
+            }
+        }
+    }
+}
+
+
+
 
 
 
@@ -137,6 +190,11 @@ int main() {
     if (!File){
         cerr << "Unable to open the file!";
         exit(1);
+    }
+
+    LinkedObjects* vertices[100];
+    for (int i = 0; i < vertexArray[k]; i++) {
+        vertices[i] = new LinkedObjects(i + 1, false);
     }
     
     getline(File, FileString);
@@ -169,7 +227,6 @@ int main() {
         }
 
 
-
     while(File >> FileString) {
        getline(File, FileString); 
        int amount = 0;
@@ -180,6 +237,10 @@ int main() {
        for(int j=0; j<FileString.length(); j++){
             char FileStringChar = FileString[j];
             FileString[j] = tolower(FileStringChar);
+       }
+
+       for(int o = 0; o<vertexArray[k]; o++){
+        vertices[o] = new LinkedObjects(o + 1, false);
        }
 
        for (int i=0; i<FileString.length(); i++){
@@ -201,6 +262,7 @@ int main() {
                     edge2 = 0;
                     undirectedMartix(edge1, edge2);
                     undirectedAdjencyList(edge1, edge2);
+                    vertices[edge1 - 1]->addEdge(vertices[edge2 - 1], vertexArray[k]);
                 }
             }else if(total == 530){
                 k++;
@@ -209,6 +271,32 @@ int main() {
 
 
        }
+
+    //file of magic stuff
+    ifstream BSTFile;
+    BSTFile.open("C:\\Users\\sorin\\OneDrive\\Documents\\GitHub\\Algorithms\\Projects\\lol.txt");
+    string BSTString;
+
+    getline(BSTFile, BSTString); 
+    struct Node* start = NULL;
+    start = BinaryTreeInsert(start, BSTString);
+
+    while(BSTFile >> BSTString){
+        getline(BSTFile, BSTString); 
+        BinaryTreeInsert(start, BSTString);
+    }
+
+    //file of search stuff that he wants
+    ifstream BSTSearch;
+    BSTSearch.open("C:\\Users\\sorin\\OneDrive\\Documents\\GitHub\\Algorithms\\Projects\\lol.txt");
+    string BSTSearchString;
+
+    while (BSTSearch >> BSTSearchString){
+        getline(BSTSearch, BSTSearchString);
+        BinaryTreeSearch(start, BSTSearchString);
+    }
+    
+
        
 }
 
