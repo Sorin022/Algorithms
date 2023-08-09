@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 const int vertexAmount = 1000;
@@ -17,6 +18,55 @@ typedef Node2* ptr2;
 struct Edge{
     int source, destintation, weight;
 };
+
+struct BellManGraph{
+    int vertex, edge;
+
+    struct Edge* theEdge;
+};
+
+struct BellManGraph* makeGraph(int vertex, int edge){
+    struct BellManGraph* theGraph = new BellManGraph;
+    theGraph->vertex = vertex;
+    theGraph->edge = edge;
+    theGraph->theEdge = new Edge[edge];
+}
+
+void BellManFrodAlgo(struct BellManGraph* theGraph, int source){
+    int vertex = theGraph->vertex;
+    int edge = theGraph->edge;
+    int distance[vertex];
+
+    for(int i = 0; i<vertex; i++){
+        distance[i] = INT_MAX;
+        distance[source] = 0;
+    }
+
+    for(int i = 1; i <= vertex-1; i++){
+        for(int j = 0; j < edge; j++){
+            int vSource = theGraph->theEdge[j].source;
+            int vDestination = theGraph->theEdge[j].destintation;
+            int weight = theGraph->theEdge[j].weight;
+            
+            if(distance[vSource] != INT_MAX && distance[vSource] + weight < distance[vDestination]){
+                distance[vDestination] = distance[vSource] + weight;
+            }
+        }
+    }
+
+    for(int i = 0; i < edge; i++){
+        int vSource = theGraph->theEdge[i].source;
+        int vDestination = theGraph->theEdge[i].destintation;
+        int weight = theGraph->theEdge[i].weight;
+
+        if(distance[vSource] != INT_MAX && distance[vSource] + weight < distance[vDestination]){
+            return;
+        }
+
+
+
+    }
+}
 
 class TheGraph{
     ptr2 AdjacencyListNode(int data, int weight, ptr2 head){
@@ -55,9 +105,6 @@ class TheGraph{
 
 };
 
-void WDAdjancey(){
-    
-}
 
 struct Node
 {
@@ -133,15 +180,89 @@ double knapsack(struct spice array[], int number, int amount){
 }
 
 int main(){
+    ifstream File;
+    string FileString;
     int direction = 0;
     int v1Array = 0;
     int v2Array = 0;
-    int amount = 0;
+    int vertexAmount = 0;
 
     int MartixArray[2][vertexAmount][vertexAmount];
 
-    WDMatrix(MartixArray, direction, v1Array, v2Array, amount);
+    WDMatrix(MartixArray, direction, v1Array, v2Array, vertexAmount);
+
+    File.open("C:\\Users\\sorin\\OneDrive\\Documents\\GitHub\\Algorithms\\Projects\\graph.txt");
+
+    if (!File){
+        cerr << "Unable to open the file!";
+        exit(1);
+    }
+
+    getline(File, FileString);
+
+    while(getline(File, FileString) && File >> FileString){
+            int amount = 0;
+            int total  = 0;
 
 
+            for(int j=0; j<FileString.length(); j++){
+                    char FileStringChar = FileString[j];
+                    FileString[j] = tolower(FileStringChar);
+            }
+
+            for (int i=0; i<FileString.length(); i++){
+                amount = int(FileString[i]);
+                total = amount + total;
+
+                if (amount == 32){
+                    amount = 0;
+                    total  = 0;
+                }else if(total == 670){
+                    vertexAmount++;
+                }
+            }
+    }
+
+    int vertex[vertexAmount];
+    int v1[vertexAmount*2];
+    int v2[vertexAmount*2];
+    int PH1 = 0;
+    int PH2 = 0;
+    int directionArray[vertexAmount*vertexAmount];
+    int whichDir = 0;
+
+    for(int i=0; i<vertexAmount; i++){
+        vertex[i] = i+1;
+    }
+
+    while(getline(File, FileString) && File >> FileString){
+            int amount = 0;
+            int total  = 0;
+
+
+            for(int j=0; j<FileString.length(); j++){
+                    char FileStringChar = FileString[j];
+                    FileString[j] = tolower(FileStringChar);
+            }
+
+            for (int i=0; i<FileString.length(); i++){
+                amount = int(FileString[i]);
+                total = amount + total;
+
+                if (amount == 32){
+                    amount = 0;
+                    total  = 0;
+                    direction = 0;
+                }else if(total == 405){
+                    v1[PH1] = (int)FileString[i+2];
+                    PH1++;
+                }else if(amount == 45){
+                    v2[PH2] = (int)FileString[i+2];
+                    PH2++;
+                    directionArray[whichDir] = (int)FileString[i+2];
+                    whichDir++;
+                }
+            }
+    }
 
 }
